@@ -34,6 +34,8 @@
         <form>
             <textarea id="kaplan-text" length="1500"></textarea>
             <input type="button" value="K*A*P*L*A*N" onclick="kaplan()"/>
+            <input type="button" value="FABLAN 😍!!!" onclick="kaplan(true)"/>
+
         </form>
         <div class="result-row">
             <div id="result"></div>
@@ -41,15 +43,15 @@
         <script id="rendered-js">
             var arabicExeptions = {
                 connectedLetters: "بتثجحخسشصضطظعغفقكلمنهيػؼٮٹئٺٻټٽپٿڀځڂڃڄڅچڇښڛڜڝڞڟڠڡڢڣڤڥڦڧڨکڪګڬڭڮگڰڱڲڳڴڵڶڷڸڹںڻڼڽھڿہیێۺۻۼۿ",
-            harakat: ["ً", "ٌ", "ٍ", "َ", "ُ", "ِ", "ّ", "ْ", "ٓ", "ٔ", "ٕ", "ٖ", "ٗ", "٘", "ٙ", "ٚ", "ٛ", "ٜ", "ٝ", "ٞ", "ٟ"]
+            harakat: ["ً", "ٌ", "ٍ", "َ", "ُ", "ِ", "ّ", "ْ", "ٓ", "ٔ", "ٕ", "ٖ", "ٗ", "٘", "ٙ", "ٚ", "ٛ", "ٜ", "ٝ", "ٞ", "ٟ", "ٰ"]
             }
 
-            function kaplan() {
+            function kaplan(fab) {
                 var text = document.getElementById('kaplan-text').value;
                 var splitText = text.split(' ');
                 for(var i = 0; i < splitText.length; i++) {
                     // splitText[i] = splitText[i].toUpperCase().split('').join('*');
-                    splitText[i] = wordSplit(splitText[i]);
+                    splitText[i] = wordSplit(splitText[i], fab);
                 }
                 var resultText = splitText.join(' ');
 
@@ -57,7 +59,8 @@
                 result.innerText = resultText;
             }
 
-            function wordSplit(word) {
+            function wordSplit(word, fab) {
+                var separator = fab ? "⭐" : "*"
                 var wordArr = word.split('');
                 var resWord = "";
                 var prevConnected = false;
@@ -65,7 +68,7 @@
                 for (var i = 0; i < wordArr.length; i++) {
                     if (wordArr[i] == "ـ") continue;
                     if (/([\uD800-\uDBFF])/.test(wordArr[i])) {
-                        resWord += (noStar || i == 0 ? "" : "*");
+                        resWord += (noStar || i == 0 ? "" : separator);
                     }
                     if (/\s/.test(wordArr[i])  || /([\uD800-\uDBFF])/.test(wordArr[i]) || /([\uFE00-\uFE0F])/.test(wordArr[i]) || /([\u200D])/.test(wordArr[i])) {
                         prevConnected = false;
@@ -78,10 +81,10 @@
                         continue;
                     }
                     if (prevConnected) {
-                        resWord += "ـ*";
+                        resWord += "ـ" + separator;
                         resWord += "ـ";
                     } else if (i != 0) {
-                        resWord += (noStar ? "" : "*");
+                        resWord += (noStar ? "" : separator);
                     }
 
                     if (arabicExeptions.connectedLetters.indexOf(wordArr[i]) >= 0) {
