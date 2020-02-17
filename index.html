@@ -26,6 +26,7 @@
                 width: 600px;
                 border: 1px dashed #e4e4e4;
                 padding: 10px;
+                word-break: break-word;
             }
         </style>
     </head>
@@ -39,7 +40,7 @@
         </div>
         <script id="rendered-js">
             var arabicExeptions = {
-                connectedLetters: "بتثجحخسشصضطظعغفقكلمنهيػؼٮٹئٺٻټٽپٿڀځڂڃڄڅچڇښڛڜڝڞڟڠڡڢڣڤڥڦڧڨکڪګڬڭڮگڰڱڲڳڴڵڶڷڸڹںڻڼڽھڿہیێېۑۺۻۼۿ",
+                connectedLetters: "بتثجحخسشصضطظعغفقكلمنهيػؼٮٹئٺٻټٽپٿڀځڂڃڄڅچڇښڛڜڝڞڟڠڡڢڣڤڥڦڧڨکڪګڬڭڮگڰڱڲڳڴڵڶڷڸڹںڻڼڽھڿہیێۺۻۼۿ",
             harakat: ["ً", "ٌ", "ٍ", "َ", "ُ", "ِ", "ّ", "ْ", "ٓ", "ٔ", "ٕ", "ٖ", "ٗ", "٘", "ٙ", "ٚ", "ٛ", "ٜ", "ٝ", "ٞ", "ٟ"]
             }
 
@@ -51,7 +52,6 @@
                     splitText[i] = wordSplit(splitText[i]);
                 }
                 var resultText = splitText.join(' ');
-                console.log(resultText)
 
                 var result = document.getElementById('result');
                 result.innerText = resultText;
@@ -60,25 +60,36 @@
             function wordSplit(word) {
                 var wordArr = word.split('');
                 var resWord = "";
-                var prevConnectedAr = false;
+                var prevConnected = false;
+                var noStar = false;
                 for (var i = 0; i < wordArr.length; i++) {
                     if (wordArr[i] == "ـ") continue;
+                    if (/([\uD800-\uDBFF])/.test(wordArr[i])) {
+                        resWord += (noStar || i == 0 ? "" : "*");
+                    }
+                    if (/\s/.test(wordArr[i])  || /([\uD800-\uDBFF])/.test(wordArr[i]) || /([\uFE00-\uFE0F])/.test(wordArr[i]) || /([\u200D])/.test(wordArr[i])) {
+                        prevConnected = false;
+                        resWord += wordArr[i];
+                        noStar = true;
+                        continue;
+                    }
                     if (arabicExeptions.harakat.indexOf(wordArr[i]) >= 0) {
                         resWord += wordArr[i].toUpperCase();
                         continue;
                     }
-                    if (prevConnectedAr) {
+                    if (prevConnected) {
                         resWord += "ـ*";
                         resWord += "ـ";
                     } else if (i != 0) {
-                        resWord += "*";
+                        resWord += (noStar ? "" : "*");
                     }
 
                     if (arabicExeptions.connectedLetters.indexOf(wordArr[i]) >= 0) {
-                        prevConnectedAr = true;
+                        prevConnected = true;
                     } else {
-                        prevConnectedAr = false;
+                        prevConnected = false;
                     }
+                    noStar = false;
                     resWord += wordArr[i].toUpperCase();
                 }
                 return resWord;
