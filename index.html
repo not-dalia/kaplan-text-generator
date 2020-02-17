@@ -27,6 +27,7 @@
                 border: 1px dashed #e4e4e4;
                 padding: 10px;
                 word-break: break-word;
+                white-space: pre;
             }
         </style>
     </head>
@@ -53,14 +54,14 @@
                     // splitText[i] = splitText[i].toUpperCase().split('').join('*');
                     splitText[i] = wordSplit(splitText[i], fab);
                 }
-                var resultText = splitText.join(' ');
+                var resultText = splitText.join('   ');
 
                 var result = document.getElementById('result');
                 result.innerText = resultText;
             }
 
             function wordSplit(word, fab) {
-                var separator = fab ? "⭐" : "*"
+                var separator = fab ? " ⭐" : "*"
                 var wordArr = word.split('');
                 var resWord = "";
                 var prevConnected = false;
