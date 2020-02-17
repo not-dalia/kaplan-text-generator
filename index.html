@@ -38,17 +38,50 @@
             <div id="result"></div>
         </div>
         <script id="rendered-js">
+            var arabicExeptions = {
+                connectedLetters: "بتثجحخسشصضطظعغفقكلمنهيػؼٮٹئٺٻټٽپٿڀځڂڃڄڅچڇښڛڜڝڞڟڠڡڢڣڤڥڦڧڨکڪګڬڭڮگڰڱڲڳڴڵڶڷڸڹںڻڼڽھڿہیێېۑۺۻۼۿ",
+            harakat: ["ً", "ٌ", "ٍ", "َ", "ُ", "ِ", "ّ", "ْ", "ٓ", "ٔ", "ٕ", "ٖ", "ٗ", "٘", "ٙ", "ٚ", "ٛ", "ٜ", "ٝ", "ٞ", "ٟ"]
+            }
+
             function kaplan() {
                 var text = document.getElementById('kaplan-text').value;
                 var splitText = text.split(' ');
-                for (var i = 0; i < splitText.length; i++) {
-                    splitText[i] = splitText[i].toUpperCase().split('').join('*');
+                for(var i = 0; i < splitText.length; i++) {
+                    // splitText[i] = splitText[i].toUpperCase().split('').join('*');
+                    splitText[i] = wordSplit(splitText[i]);
                 }
                 var resultText = splitText.join(' ');
                 console.log(resultText)
 
                 var result = document.getElementById('result');
                 result.innerText = resultText;
+            }
+
+            function wordSplit(word) {
+                var wordArr = word.split('');
+                var resWord = "";
+                var prevConnectedAr = false;
+                for (var i = 0; i < wordArr.length; i++) {
+                    if (wordArr[i] == "ـ") continue;
+                    if (arabicExeptions.harakat.indexOf(wordArr[i]) >= 0) {
+                        resWord += wordArr[i].toUpperCase();
+                        continue;
+                    }
+                    if (prevConnectedAr) {
+                        resWord += "ـ*";
+                        resWord += "ـ";
+                    } else if (i != 0) {
+                        resWord += "*";
+                    }
+
+                    if (arabicExeptions.connectedLetters.indexOf(wordArr[i]) >= 0) {
+                        prevConnectedAr = true;
+                    } else {
+                        prevConnectedAr = false;
+                    }
+                    resWord += wordArr[i].toUpperCase();
+                }
+                return resWord;
             }
         </script>
     </body>
