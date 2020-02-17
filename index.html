@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>K*A*P*L*A*N T*E*X*T G*E*N*E*R*A*T*O*R</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            form, .result-row {
+                padding: 10px;
+            }
+
+            textarea, input {
+                display: block;
+            }
+
+            textarea {
+                width: 600px;
+                min-height: 200px;
+                margin-bottom: 10px;
+            }
+
+            #result {
+                width: 600px;
+                border: 1px dashed #e4e4e4;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body translate="no">
+        <form>
+            <textarea id="kaplan-text" length="1500"></textarea>
+            <input type="button" value="K*A*P*L*A*N" onclick="kaplan()"/>
+        </form>
+        <div class="result-row">
+            <div id="result"></div>
+        </div>
+        <script id="rendered-js">
+            function kaplan() {
+                var text = document.getElementById('kaplan-text').value;
+                var splitText = text.split(' ');
+                for (var i = 0; i < splitText.length; i++) {
+                    splitText[i] = splitText[i].toUpperCase().split('').join('*');
+                }
+                var resultText = splitText.join(' ');
+                console.log(resultText)
+
+                var result = document.getElementById('result');
+                result.innerText = resultText;
+            }
+        </script>
+    </body>
+</html>
